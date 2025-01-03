@@ -1,4 +1,4 @@
-#include "ringqueue.hpp"
+#include "RingQueue.hpp"
 
 // Append bytes to the ring queue
 bool IRingQueue::append(const uint8_t* data, size_t length)

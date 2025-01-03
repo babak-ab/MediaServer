@@ -12,15 +12,18 @@ set(Boost_NO_WARN_NEW_VERSIONS 1)
 # Project name and language
 project(MediaServer LANGUAGES CXX)
 
-include_directories(${CMAKE_SOURCE_DIR}/utils)
 
-set(SOURCES
-    main.cpp            # Your main file
-    utils/ringqueue.cpp # Add the implementation file for RingQueue
+include_directories(${CMAKE_SOURCE_DIR}/utils ${CMAKE_SOURCE_DIR}/protocols/rtp)
+
+file(GLOB SOURCES
+    ${CMAKE_SOURCE_DIR}/main.cpp
+    ${CMAKE_SOURCE_DIR}/utils/*.cpp
+    ${CMAKE_SOURCE_DIR}/protocols/rtp/*.cpp
 )
 
 
-add_executable(MediaServer SOURCES)
+
+add_executable(MediaServer  ${SOURCES})
 
 # Find the required Boost components
 find_package(Boost REQUIRED COMPONENTS system thread filesystem)

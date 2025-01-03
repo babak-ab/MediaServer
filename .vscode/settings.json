@@ -85,6 +85,14 @@
         "xlocmes": "cpp",
         "xlocmon": "cpp",
         "xloctime": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "xthread": "cpp",
+        "cfenv": "cpp",
+        "deque": "cpp",
+        "fstream": "cpp",
+        "numeric": "cpp",
+        "queue": "cpp",
+        "strstream": "cpp",
+        "valarray": "cpp"
     }
 }
