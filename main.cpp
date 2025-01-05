@@ -1,26 +1,26 @@
+#include "RtpPacketInterpreter.hpp"
+#include "Subscriber.hpp"
 #include <array>
 #include <boost/asio.hpp>
 #include <iostream>
-#include "Subscriber.hpp"
-#include "RtpPacketInterpreter.hpp"
 
 using boost::asio::ip::udp;
 
-class UDPReceiver :  public std::enable_shared_from_this<Subscriber> {
+class UDPReceiver : public std::enable_shared_from_this<Subscriber> {
 public:
     UDPReceiver(boost::asio::io_context& io_context, short port)
         : socket_(io_context, udp::endpoint(udp::v4(), port))
     {
 
         packet = std::make_shared<RtpPacketInterpreter>();
-        //packet->add_subscriber(shared_from_this());
+        // packet->add_subscriber(shared_from_this());
         start_receive();
-
     }
 
-    void receive_notification(const std::vector<uint8_t>& message) {
-
+    void receive_notification(const std::vector<uint8_t>& message)
+    {
     }
+
 private:
     void start_receive()
     {
@@ -30,9 +30,10 @@ private:
                 if (!ec) {
                     //std::cout << "Received: " << bytes_received << " bytes" << std::endl;
 
-                    std::vector<uint8_t> byteVector(receive_buffer_.begin(), receive_buffer_.end());
+                    std::vector<uint8_t> byteVector(receive_buffer_.begin(), receive_buffer_.begin() + bytes_received);
+
                     packet->append(byteVector);
-                     
+
                     // Print the first 4 bytes as hex
                     // std::cout << "First 4 bytes (Hex): ";
                     // for (size_t i = 0; i < 30 && i < bytes_received; ++i) {
@@ -45,7 +46,6 @@ private:
                     std::cout << "Error receiving message: " << ec.message() << std::endl;
                 }
 
-
                 // Continue receiving
                 start_receive();
             });
@@ -55,8 +55,6 @@ private:
     udp::endpoint remote_endpoint_;
     std::array<char, 1024> receive_buffer_;
     std::shared_ptr<RtpPacketInterpreter> packet;
-
-    
 };
 
 int main()

@@ -1,27 +1,43 @@
 
 #pragma once
+#include <condition_variable>
 #include <iostream>
 #include <mutex>
 #include <queue>
 #include <thread>
-#include <condition_variable>
+template <typename T>
 class IRingQueue {
 public:
-    explicit IRingQueue()
-    {
-    }
+    explicit IRingQueue() = default;
 
     virtual ~IRingQueue() = default;
-    bool append(const uint8_t* data, size_t length);
-    void get_bytes(uint8_t* dest, size_t length);
+
+    bool append(const T& item)
+    {
+
+        std::unique_lock<std::mutex> lock(_queueMutex);
+
+        _queue.push(item);
+        _condition.notify_all();
+        return true;
+    }
+    void get_items(std::vector<T>& buffer, size_t length)
+    {
+        std::unique_lock<std::mutex> lock(_queueMutex);
+
+        _condition.wait(lock, [this, length] { return _queue.size() >= length; });
+
+        // Copy the required number of bytes from the queue
+        for (size_t i = 0; i < length; ++i) {
+            buffer.push_back(_queue.front());
+            _queue.pop(); // Remove the item from the queue
+        }
+    }
 
     // Retrieve bytes from the ring queue
 
-    // Pure virtual method to detect and extract a valid packet struct
-    virtual void find_packet(const std::vector<uint8_t>& packet) = 0;
-
 protected:
-    std::queue<int> _queue;
+    std::queue<T> _queue;
     std::mutex _queueMutex; // Mutex to synchronize access to the queue
     std::condition_variable _condition;
     // Get available space in the buffer

@@ -15,14 +15,14 @@ struct RtpHeader {
     uint32_t timestamp; // 32 bits for timestamp
     uint32_t ssrc; // 32 bits for SSRC
 };
-class RtpPacket : public IRingQueue {
+class RtpPacket : public IRingQueue<std::vector<uint8_t>> {
 public:
     explicit RtpPacket()
         : IRingQueue()
     {
     }
 
-    void find_packet(const std::vector<uint8_t>& packet) override;
+    void find_packet(const std::vector<uint8_t>& packet);
 
 private:
 };

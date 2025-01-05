@@ -2,7 +2,7 @@
 
 void PacketInterpreter::append(const std::vector<uint8_t>& message)
 {
-  packet()->append(message.data(),message.size());
+  packet()->append(message);
 }
 
 PacketInterpreter::PacketInterpreter()

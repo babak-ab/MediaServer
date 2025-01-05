@@ -24,7 +24,7 @@ protected:
     // Pure virtual function to be implemented by subclasses to process the packet
     // data
     virtual void interpret() = 0;
-    virtual std::shared_ptr<IRingQueue> packet() = 0;
+    virtual std::shared_ptr<IRingQueue<std::vector<uint8_t>>> packet() = 0;
 
     std::mutex mutex_; // Mutex to protect subscriber list
 

@@ -26,7 +26,7 @@ void RtpPacketInterpreter::interpret()
     interpret();
 }
 
-std::shared_ptr<IRingQueue> RtpPacketInterpreter::packet()
+std::shared_ptr<IRingQueue<std::vector<uint8_t>>> RtpPacketInterpreter::packet()
 {
     return _packet;
 }

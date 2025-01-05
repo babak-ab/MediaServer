@@ -8,7 +8,7 @@ public:
     RtpPacketInterpreter();
     void interpret() override;
 
-    std::shared_ptr<IRingQueue> packet() override;
+    std::shared_ptr<IRingQueue<std::vector<uint8_t>>> packet() override;
 
 private:
     bool is_valid_packet(const Packet& packet);
