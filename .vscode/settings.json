@@ -93,6 +93,10 @@
         "numeric": "cpp",
         "queue": "cpp",
         "strstream": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "*.ipp": "cpp",
+        "bufferobject": "cpp",
+        "mixinvector": "cpp",
+        "buffered_value": "cpp"
     }
 }

@@ -5,6 +5,11 @@ void PacketInterpreter::append(const std::vector<uint8_t>& message)
   packet()->append(message.data(),message.size());
 }
 
+PacketInterpreter::PacketInterpreter()
+{
+  start();
+}
+
 // Start the interpreter thread
 void PacketInterpreter::start() {
   thread_ = std::thread(&PacketInterpreter::interpret, this);

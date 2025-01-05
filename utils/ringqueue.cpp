@@ -3,29 +3,23 @@
 // Append bytes to the ring queue
 bool IRingQueue::append(const uint8_t* data, size_t length)
 {
-    if (length > available_space()) {
-        std::cerr << "Not enough space in the buffer to append data." << std::endl;
-        return false; // Not enough space
-    }
+    std::unique_lock<std::mutex> lock(_queueMutex);
 
     for (size_t i = 0; i < length; ++i) {
-        buffer_[tail_] = data[i];
-        tail_ = (tail_ + 1) % buffer_.size();
+        _queue.push(data[i]); // Append each byte to the queue
     }
-    size_ += length;
+    _condition.notify_all();
     return true;
 }
-bool IRingQueue::get_bytes(uint8_t* dest, size_t length)
+void IRingQueue::get_bytes(uint8_t* dest, size_t length)
 {
-    if (length > size_) {
-        std::cerr << "Not enough data to read." << std::endl;
-        return false; // Not enough data to read
-    }
+    std::unique_lock<std::mutex> lock(_queueMutex);
 
+    _condition.wait(lock, [this, length] { return _queue.size() >= length; });
+
+    // Copy the required number of bytes from the queue
     for (size_t i = 0; i < length; ++i) {
-        dest[i] = buffer_[head_];
-        head_ = (head_ + 1) % buffer_.size();
+        dest[i] = _queue.front();
+        _queue.pop();
     }
-    size_ -= length;
-    return true;
 }

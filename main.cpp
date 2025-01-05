@@ -13,7 +13,7 @@ public:
     {
 
         packet = std::make_shared<RtpPacketInterpreter>();
-        packet->add_subscriber(shared_from_this());
+        //packet->add_subscriber(shared_from_this());
         start_receive();
 
     }
@@ -28,21 +28,23 @@ private:
             boost::asio::buffer(receive_buffer_), remote_endpoint_,
             [this](boost::system::error_code ec, std::size_t bytes_received) {
                 if (!ec) {
-                    std::cout << "Received: " << bytes_received << " bytes" << std::endl;
+                    //std::cout << "Received: " << bytes_received << " bytes" << std::endl;
 
-                    //packet->append()
+                    std::vector<uint8_t> byteVector(receive_buffer_.begin(), receive_buffer_.end());
+                    packet->append(byteVector);
                      
                     // Print the first 4 bytes as hex
-                    std::cout << "First 4 bytes (Hex): ";
-                    for (size_t i = 0; i < 4 && i < bytes_received; ++i) {
-                        std::cout << std::hex << std::setw(2) << std::setfill('0')
-                                  << (static_cast<int>(receive_buffer_[i]) & 0xFF) << " ";
-                    }
-                    std::cout << std::dec << std::endl; // Switch back to decimal output
+                    // std::cout << "First 4 bytes (Hex): ";
+                    // for (size_t i = 0; i < 30 && i < bytes_received; ++i) {
+                    //     std::cout << std::hex << std::setw(2) << std::setfill('0')
+                    //               << (static_cast<int>(receive_buffer_[i]) & 0xFF) << " ";
+                    // }
+                    // std::cout << std::dec << std::endl; // Switch back to decimal output
 
                 } else {
                     std::cout << "Error receiving message: " << ec.message() << std::endl;
                 }
+
 
                 // Continue receiving
                 start_receive();
@@ -61,7 +63,7 @@ int main()
 {
     try {
         boost::asio::io_context io_context;
-        UDPReceiver receiver(io_context, 12345); // Listen on port 12345
+        UDPReceiver receiver(io_context, 5001); // Listen on port 12345
         io_context.run(); // Start the asynchronous I/O
     } catch (const std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;

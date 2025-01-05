@@ -1,35 +1,32 @@
 
 #pragma once
-#include <algorithm>
 #include <iostream>
-#include <vector>
-
+#include <mutex>
+#include <queue>
+#include <thread>
+#include <condition_variable>
 class IRingQueue {
 public:
-    explicit IRingQueue(size_t capacity)
-        : buffer_(capacity)
-        , head_(0)
-        , tail_(0)
-        , size_(0)
+    explicit IRingQueue()
     {
     }
 
     virtual ~IRingQueue() = default;
     bool append(const uint8_t* data, size_t length);
-    bool get_bytes(uint8_t* dest, size_t length);
+    void get_bytes(uint8_t* dest, size_t length);
 
     // Retrieve bytes from the ring queue
 
     // Pure virtual method to detect and extract a valid packet struct
-    virtual bool find_packet() = 0;
+    virtual void find_packet(const std::vector<uint8_t>& packet) = 0;
 
 protected:
-    std::vector<uint8_t> buffer_;
-    size_t head_, tail_, size_;
-
+    std::queue<int> _queue;
+    std::mutex _queueMutex; // Mutex to synchronize access to the queue
+    std::condition_variable _condition;
     // Get available space in the buffer
-    size_t available_space() const
+    size_t size() const
     {
-        return buffer_.size() - size_;
+        return _queue.size();
     }
 };

@@ -8,11 +8,11 @@ public:
     RtpPacketInterpreter();
     void interpret() override;
 
-    IRingQueue* packet() override;
+    std::shared_ptr<IRingQueue> packet() override;
 
 private:
     bool is_valid_packet(const Packet& packet);
-    RtpPacket* _packet;
+    std::shared_ptr<RtpPacket> _packet;
 };
 
 #endif /* EF24F8E0_17B3_486F_8ECC_C96989993317 */

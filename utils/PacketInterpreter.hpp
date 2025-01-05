@@ -14,6 +14,7 @@ public:
 
     void append(const std::vector<uint8_t>& packet);
 
+    PacketInterpreter();
     virtual ~PacketInterpreter() = default;
 
     void start();
@@ -23,7 +24,7 @@ protected:
     // Pure virtual function to be implemented by subclasses to process the packet
     // data
     virtual void interpret() = 0;
-    virtual IRingQueue* packet() = 0;
+    virtual std::shared_ptr<IRingQueue> packet() = 0;
 
     std::mutex mutex_; // Mutex to protect subscriber list
 
